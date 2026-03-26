@@ -1,0 +1,58 @@
+import pyodbc
+import pandas as pd
+from datetime import datetime
+import os
+
+SERVER_NAME = 'your-server-address'
+DATABASE_NAME = 'YourDatabaseName'
+ITEM_TABLE = '[Company$Item]'
+OUTPUT_FOLDER = 'reports'
+
+def generuj_raport_excel():
+    conn_str = f'DRIVER={{SQL Server}};SERVER={SERVER_NAME};DATABASE={DATABASE_NAME};Trusted_Connection=yes;'
+    
+    query = f"""
+    SELECT 
+        [No_] AS [ProductCode], 
+        [Description] AS [Name],
+        [Unit Cost] AS [UnitCost],
+        YEAR(GETDATE()) AS [Year],
+        MONTH(GETDATE()) AS [Month]
+    FROM {ITEM_TABLE}
+    ORDER BY [No_] ASC
+    """
+    
+    try:
+        with pyodbc.connect(conn_str) as conn:
+            df = pd.read_sql(query, conn)
+            
+        df['UnitCost'] = pd.to_numeric(df['UnitCost'], errors='coerce').apply(
+            lambda x: f"{x:.2f}".replace('.', ',') if pd.notna(x) else '0,00'
+        )
+        
+        if not os.path.exists(OUTPUT_FOLDER):
+            os.makedirs(OUTPUT_FOLDER)
+            
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        filepath = os.path.join(OUTPUT_FOLDER, f"Report_{timestamp}.xlsx")
+        
+        writer = pd.ExcelWriter(filepath, engine='xlsxwriter')
+        df.to_excel(writer, index=False, sheet_name='Prices')
+        
+        workbook  = writer.book
+        worksheet = writer.sheets['Prices']
+        
+        text_format = workbook.add_format({'num_format': '@'})
+        
+        worksheet.set_column('A:A', 20)
+        worksheet.set_column('B:B', 40)
+        worksheet.set_column('C:D', 15, text_format)
+        
+        writer.close()
+        print(f"Success: {filepath}")
+        
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    generuj_raport_excel()
