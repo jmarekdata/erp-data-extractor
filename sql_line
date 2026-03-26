@@ -1,0 +1,29 @@
+USE [YourDatabaseName];
+GO
+
+SELECT 
+    s.name AS [Schema], 
+    t.name AS [TableName]
+FROM sys.tables t
+JOIN sys.schemas s ON t.schema_id = s.schema_id;
+GO
+
+SELECT TOP (100) * FROM [YourTableName];
+
+SELECT name 
+FROM sys.tables 
+WHERE name LIKE '%$Item%' 
+   OR name LIKE '%$Sales Price%';
+
+USE [YourDatabaseName];
+GO
+
+SELECT 
+    [No_] AS [ProductCode], 
+    [Description] AS [Name],
+    [Unit Cost] AS [UnitCost],               
+    YEAR(GETDATE()) AS [Year],
+    MONTH(GETDATE()) AS [Month]
+FROM [Company$Item]
+WHERE [Blocked] = 0
+ORDER BY [No_];
