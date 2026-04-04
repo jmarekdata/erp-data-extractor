@@ -2,7 +2,6 @@ import pyodbc
 import pandas as pd
 from datetime import datetime
 import os
-
 SERVER_NAME = 'your-server-address'
 DATABASE_NAME = 'YourDatabaseName'
 ITEM_TABLE = '[Company$Item]'
