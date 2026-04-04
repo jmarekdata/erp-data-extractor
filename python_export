@@ -53,6 +53,5 @@ def generuj_raport_excel():
         
     except Exception as e:
         print(f"Error: {e}")
-
 if __name__ == "__main__":
     generuj_raport_excel()
