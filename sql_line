@@ -1,13 +1,11 @@
 USE [YourDatabaseName];
 GO
-
 SELECT 
     s.name AS [Schema], 
     t.name AS [TableName]
 FROM sys.tables t
 JOIN sys.schemas s ON t.schema_id = s.schema_id;
 GO
-
 SELECT TOP (100) * FROM [YourTableName];
 
 SELECT name 
