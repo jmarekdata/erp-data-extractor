@@ -5,7 +5,7 @@ import os
 SERVER_NAME = 'your-server-address'
 DATABASE_NAME = 'YourDatabaseName'
 ITEM_TABLE = '[Company$Item]'
-OUTPUT_FOLDER = 'reports'
+OUTPUT_FOLDER = 'reports'  
 
 def generuj_raport_excel():
     conn_str = f'DRIVER={{SQL Server}};SERVER={SERVER_NAME};DATABASE={DATABASE_NAME};Trusted_Connection=yes;'
